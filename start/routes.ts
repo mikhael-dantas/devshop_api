@@ -20,6 +20,10 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 
+Route.get('/', async () => {
+  return 'Hello, This is the Devshop api, you can check the documentation at https://github.com/mikhael-dantas/devshop_api'
+})
+
 Route.post('/login', 'AuthController.login')
 Route.delete('/login', 'AuthController.logout').middleware('auth')
 
