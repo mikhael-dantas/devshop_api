@@ -1,0 +1,206 @@
+openapi: 3.0.0
+
+info:
+  title: Shop API simulation
+  description: This is a simple shop API simulation
+  contact:
+    email: mikhael-dcs@outlook.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+  version: 1.0.0
+
+servers:
+  - url: 'https://virtserver.swaggerhub.com/mikhael-dantas/devshop/1.0.0'
+    description: SwaggerHub API Auto Mocking
+
+tags:
+  - name: Admins
+    description: Operations available only to users with admin role
+  - name: Masters
+    description: Operations available only to users with master role
+
+paths:
+  /:
+    get:
+      summary: searches homepage info
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: welcome to the API
+  /users:
+    get:
+      tags:
+        - Masters
+      security:
+        - bearerAuth: []
+      summary: searches users info
+      description: By passing in the appropriate options and having the right permissions, you can search users info
+      parameters:
+        - name: email
+          in: query
+          description: pass an option to search users by email
+          required: false
+          schema:
+            type: boolean
+        - name: admin
+          in: query
+          description: pass an option to search only admins
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 2
+                    email:
+                      type: string
+                      example: WidgetAdapter@gmail.com
+        '400':
+          description: Bad request
+        '401':
+          description: Access token is missing or invalid
+  /users/user:
+    get:
+      security:
+        - bearerAuth: []
+      summary: searches user info
+      description: By passing in the appropriate options, you can search info about the logged user in the system
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 2
+                    email:
+                      type: string
+                      example: WidgetAdapter@gmail.com
+        '400':
+          description: Bad request
+        '401':
+          description: Access token is missing or invalid
+    # post:
+    #   tags:
+    #     - admins
+    #   summary: adds an inventory item
+    #   description: Adds an item to the system
+    #   requestBody:
+    #     description: Inventory item to add
+    #     content:
+    #       application/json:
+    #         schema:
+    #           $ref: '#/components/schemas/InventoryItem'
+    #   responses:
+    #     '201':
+    #       description: item created
+    #     '400':
+    #       description: 'invalid input, object invalid'
+    #     '409':
+    #       description: an existing item already exists
+    # put:
+    #   security:
+    #     - bearerAuth: []
+  # /login:
+  # /products:
+  # /serviceorders:
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    PaginatedResourceMeta:
+      type: object
+      properties:
+        total:
+          type: integer
+          example: 250
+        per_page:
+          type: integer
+          example: 20
+        current_page:
+          type: integer
+          example: 1
+        last_page:
+          type: integer
+          example: 13
+        first_page:
+          type: integer
+          example: 1
+        first_page_url:
+          type: string
+          example: /?page=1
+        last_page_url:
+          type: string
+          example: /?page=13
+        next_page_url:
+          type: string
+          nullable: true
+          example: /?page=2
+        previous_page_url:
+          type: string
+          nullable: true
+          example: null
+    # User:
+    #   required:
+    #     - id
+    #     - manufacturer
+    #     - name
+    #     - releaseDate
+    #   type: object
+    #   properties:
+    #     id:
+    #       type: string
+    #       format: uuid
+    #       example: d290f1ee-6c54-4b01-90e6-d701748f0851
+    #     name:
+    #       type: string
+    #       example: Widget Adapter
+    #     releaseDate:
+    #       type: string
+    #       format: date-time
+    #       example: '2016-08-29T09:12:33.001Z'
+    #     manufacturer:
+    #       $ref: '#/components/schemas/Manufacturer'
+    # Manufacturer:
+    #   required:
+    #     - name
+    #   type: object
+    #   properties:
+    #     name:
+    #       type: string
+    #       example: ACME Corporation
+    #     homePage:
+    #       type: string
+    #       format: url
+    #       example: 'https://www.acme-corp.com'
+    #     phone:
+    #       type: string
+    #       example: 408-867-5309
+
